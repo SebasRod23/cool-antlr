@@ -46,23 +46,6 @@ expr
     | ID ASSIGN expr # Assign
     ;
 /*
-feature ::= ID( [ formal [[, formal]]⇤ ] ) : TYPE { expr }
-| ID : TYPE [ <- expr ]
- */
-
-
-
-/*
- * Aquí comenzaría el léxico
-
-
-
-
-formal
-    : ...
-    ;
-
-
 
 case_stat:
     ...

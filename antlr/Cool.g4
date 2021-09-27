@@ -17,14 +17,13 @@ formal: ID COLON TYPE;
 
 expr
     : primary # BASE // base
-    // |  ...           #simplecall
-    | expr (AT TYPE)? DOT ID OPEN_P (expr(COMMA expr)*)? CLOSE_P # OBJECT_CALL // objectcall
+    | expr (TYPE)? DOT simplecall # OBJECT_CALL // objectcall
     | IF expr THEN expr ELSE expr FI # IF_ELSE // if
-    | CASE expr OF (ID COLON TYPE CASEASSIGN expr SEMICOLON)+ ESAC # SWITCH // case
+    | CASE expr OF (case_stat)+ ESAC # SWITCH // case
     | WHILE expr LOOP expr POOL # WHILE // while
-    | LET ID COLON TYPE (ASSIGN expr)? (COMMA ID COLON TYPE (ASSIGN expr)?)* IN expr # LET // let
+    | LET ID COLON TYPE (ASSIGN expr)? (let_decl)* IN expr # LET // let
     | OPEN_K (expr SEMICOLON)+ CLOSE_K # BLOCK // block
-    // |  ...           #at
+    | expr (AT TYPE)? DOT simplecall #AT //at
     | NEW TYPE expr # NEW_OBJECT // new
     | ISVOID expr # ISVOID // isvoid
     | expr MULT expr # MULTIPLICATION // mult
@@ -35,28 +34,30 @@ expr
     | expr LT expr # LESS_THAN // lt
     | expr LE expr # LESS_OR_EQUAL // le
     | expr EQ expr # EQUAL // eq
-    | NOT expr # NOT // not
-    | OPEN_P expr CLOSE_P # PARENTHESIS  
+    | NOT expr # NOT // not 
     | ID ASSIGN expr # ASSIGN // assign
     ;
 
+simplecall
+    : ID OPEN_P (expr(COMMA expr)*)? CLOSE_P # SIMPLE_CALL
+    ;
+
+case_stat
+    : ID COLON TYPE CASEASSIGN expr SEMICOLON # CASE_STAT
+    ;
+
+let_decl
+    : COMMA ID COLON TYPE (ASSIGN expr)? # LET_DECL
+    ;
+
 primary
-    : ID # ID
+    : OPEN_P expr CLOSE_P # PARENTHESIS 
+    | ID # ID
     | INT # INTEGER
     | STRING # STRING
     | TRUE  # TRUE
     | FALSE # FALSE
     ;
-
-/*
-case_stat:
-    ...
-    ;
-
-let_decl:
-    ...
-    ;
-*/
 
 fragment A : [aA] ;
 fragment C : [cC] ;

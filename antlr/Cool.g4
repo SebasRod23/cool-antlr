@@ -9,11 +9,11 @@ klass
     ;
 
 feature
-    : ID OPEN_P (param (COMMA param)*)? CLOSE_P COLON TYPE OPEN_K expr CLOSE_K # Method
+    : ID OPEN_P (formal (COMMA formal)*)? CLOSE_P COLON TYPE OPEN_K expr CLOSE_K # Method
     | ID COLON TYPE (ASSIGN expr)? # Attribute
     ;
 
-param: ID COLON TYPE;
+formal: ID COLON TYPE;
 
 expr
     : primary # BASE

@@ -9,44 +9,46 @@ klass
     ;
 
 feature
-    : ID OPEN_P (formal (COMMA formal)*)? CLOSE_P COLON TYPE OPEN_K expr CLOSE_K # Method
-    | ID COLON TYPE (ASSIGN expr)? # Attribute
+    : ID OPEN_P (formal (COMMA formal)*)? CLOSE_P COLON TYPE OPEN_K expr CLOSE_K # METHOD
+    | ID COLON TYPE (ASSIGN expr)? # ATTRIBUTE
     ;
 
 formal: ID COLON TYPE;
 
 expr
-    : primary # BASE
-    |  ...           #simplecall
-    | expr (AT TYPE)? DOT ID OPEN_P (expr(COMMA expr)*)? CLOSE_P # OBJECT_CALL
-    | IF expr THEN expr ELSE expr FI # IF_ELSE
-    | CASE expr OF (ID COLON TYPE CASEASSIGN expr SEMICOLON)+ ESAC # SWITCH
-    | WHILE expr LOOP expr POOL # WHILE
-    | LET ID COLON TYPE (ASSIGN expr)? (COMMA ID COLON TYPE (ASSIGN expr)?)* IN expr # LET
-    | OPEN_K (expr SEMICOLON)+ CLOSE_K # BLOCK
-    |  ...           #at
-    |  ...           #neg
-    | NEW TYPE expr # NEW_OBJECT
-    | ISVOID expr # ISVOID
-    | expr MULT expr # MULTIPLICATION
-    | expr DIV expr # DIVISION
-    | expr ADD expr # ADDITION
-    | expr SUBS expr # SUBSTRACTION
-    | COMP expr # COMPLEMENT
-    | expr LT expr # LESS_THAN
-    | expr LE expr # LESS_OR_EQUAL
-    | expr EQ expr # Equal
-    | NOT expr # Not
-    | '(' expr ')'
-    | ID # Id
-    | INT # Integer
-    | STRING # String
-    | TRUE  # True
-    | FALSE # False
-    | ID ASSIGN expr # Assign
+    : primary # BASE // base
+    // |  ...           #simplecall
+    | expr (AT TYPE)? DOT ID OPEN_P (expr(COMMA expr)*)? CLOSE_P # OBJECT_CALL // objectcall
+    | IF expr THEN expr ELSE expr FI # IF_ELSE // if
+    | CASE expr OF (ID COLON TYPE CASEASSIGN expr SEMICOLON)+ ESAC # SWITCH // case
+    | WHILE expr LOOP expr POOL # WHILE // while
+    | LET ID COLON TYPE (ASSIGN expr)? (COMMA ID COLON TYPE (ASSIGN expr)?)* IN expr # LET // let
+    | OPEN_K (expr SEMICOLON)+ CLOSE_K # BLOCK // block
+    // |  ...           #at
+    | NEW TYPE expr # NEW_OBJECT // new
+    | ISVOID expr # ISVOID // isvoid
+    | expr MULT expr # MULTIPLICATION // mult
+    | expr DIV expr # DIVISION // div
+    | expr ADD expr # ADDITION // plus
+    | expr SUBS expr # SUBSTRACTION // less
+    | COMP expr # COMPLEMENT // neg
+    | expr LT expr # LESS_THAN // lt
+    | expr LE expr # LESS_OR_EQUAL // le
+    | expr EQ expr # EQUAL // eq
+    | NOT expr # NOT // not
+    | OPEN_P expr CLOSE_P # PARENTHESIS  
+    | ID ASSIGN expr # ASSIGN // assign
     ;
-/*
 
+primary
+    : ID # ID
+    | INT # INTEGER
+    | STRING # STRING
+    | TRUE  # TRUE
+    | FALSE # FALSE
+    ;
+
+/*
 case_stat:
     ...
     ;
@@ -54,12 +56,8 @@ case_stat:
 let_decl:
     ...
     ;
+*/
 
-
-primary:
-    ...Son 6 casos...
-    ;
- */
 fragment A : [aA] ;
 fragment C : [cC] ;
 fragment L : [lL] ;
@@ -80,7 +78,7 @@ fragment F : [fF] ;
 
 KLASS : C L A S S ;
 INHERITS : I N H E R I T S ;
-ID : [a-z]* ;
+ID : [a-z]+ ;
 TYPE : [A-Z] [a-z]* ;
 ASSIGN : '<-' ;
 CASEASSIGN : '=>' ;

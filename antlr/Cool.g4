@@ -1,132 +1,108 @@
-// Kevin Torres Martínez - A01656257
-// Juan Sebastían Rodríguez Galarza - A01656159
-// Víctor Antonio Godínez Rodríguez - A01339529
-
 grammar Cool;           
 
 program
-    : ( klass SEMICOLON ) *
+    :   ( klass ';' ) *
     ;
 
 klass
-    : KLASS TYPE ( INHERITS TYPE )? OPEN_K ( feature SEMICOLON )* CLOSE_K
+    :   KLASS TYPE ( 'inherits' TYPE )? '{' ( feature ';' )* '}'
     ;
 
 feature
-    : ID OPEN_P (formal (COMMA formal)*)? CLOSE_P COLON TYPE OPEN_K expr CLOSE_K # METHOD
-    | ID COLON TYPE (ASSIGN expr)? # ATTRIBUTE
+    :   ID '(' ( formal (',' formal)* )? ')' ':' TYPE '{' expr '}'  #method
+    |   ID ':' TYPE ( '<-' expr )?                                  #atribute
     ;
 
-formal: ID COLON TYPE;
+formal
+    :   ID ':' TYPE
+    ;
 
 expr
-    : primary # BASE // base
-    | expr (TYPE)? DOT simplecall # OBJECT_CALL // objectcall
-    | IF expr THEN expr ELSE expr FI # IF_ELSE // if
-    | CASE expr OF (case_stat)+ ESAC # SWITCH // case
-    | WHILE expr LOOP expr POOL # WHILE // while
-    | LET ID COLON TYPE (ASSIGN expr)? (let_decl)* IN expr # LET // let
-    | OPEN_K (expr SEMICOLON)+ CLOSE_K # BLOCK // block
-    | expr (AT TYPE)? DOT simplecall #AT //at
-    | NEW TYPE expr # NEW_OBJECT // new
-    | ISVOID expr # ISVOID // isvoid
-    | expr MULT expr # MULTIPLICATION // mult
-    | expr DIV expr # DIVISION // div
-    | expr ADD expr # ADDITION // plus
-    | expr SUBS expr # SUBSTRACTION // less
-    | COMP expr # COMPLEMENT // neg
-    | expr LT expr # LESS_THAN // lt
-    | expr LE expr # LESS_OR_EQUAL // le
-    | expr EQ expr # EQUAL // eq
-    | NOT expr # NOT // not 
-    | ID ASSIGN expr # ASSIGN // assign
+    :
+    primary #base
+    | ID '(' ( expr ( ',' expr)* )? ')' #call
+    | IF expr THEN expr ELSE expr FI    #if
+    | WHILE expr LOOP expr POOL         #while
+    | LET ID ':' TYPE ('<-' expr )? (',' ID ':' TYPE ('<-' expr)? )* IN expr #let
+    | CASE expr OF (ID ':' TYPE '=>' expr ';')+ ESAC #case
+    | NEW TYPE #new
+    | '{' ( expr ';' )+ '}' #block
+    | expr '.' ID '(' ( expr  ( ',' expr)* )? ')' #call
+    | expr ( '@' TYPE )? '.' ID '(' ( expr  ( ',' expr)* )? ')' #at
+    | '˜' expr          #neg
+    | ISVOID expr       #isvoid
+    | expr '*' expr     #mult
+    | expr '/' expr     #div
+    | expr '+' expr     #add
+    | expr '-' expr     #sub
+    | expr '<' expr     #lt
+    | expr '<=' expr    #le
+    | expr '=' expr     #eq
+    | 'not' expr        #not
+    | <assoc=right> ID '<-' expr    #assign
     ;
 
-simplecall
-    : ID OPEN_P (expr(COMMA expr)*)? CLOSE_P # SIMPLE_CALL
-    ;
-
-case_stat
-    : ID COLON TYPE CASEASSIGN expr SEMICOLON # CASE_STAT
-    ;
-
-let_decl
-    : COMMA ID COLON TYPE (ASSIGN expr)? # LET_DECL
-    ;
-
-primary
-    : OPEN_P expr CLOSE_P # PARENTHESIS 
-    | ID # ID
-    | INT # INTEGER
-    | STRING # STRING
-    | TRUE  # TRUE
-    | FALSE # FALSE
+primary:
+    '(' expr ')'    #parens
+    | ID            #object
+    | INTEGER       #integer
+    | STRING        #string
+    | TRUE          #bool
+    | FALSE         #bool
     ;
 
 fragment A : [aA] ;
+fragment B : [bB] ;
 fragment C : [cC] ;
-fragment L : [lL] ;
-fragment S : [sS] ;
-fragment I : [iI] ;
-fragment N : [nN] ;
-fragment H : [hH] ;
-fragment E : [eE] ;
-fragment R : [rR] ;
-fragment T : [tT] ;
-fragment O : [oO] ;
-fragment V : [vV] ;
 fragment D : [dD] ;
-fragment W : [wW] ;
-fragment P : [pP] ;
+fragment E : [eE] ;
 fragment F : [fF] ;
-
+fragment G : [gG] ;
+fragment H : [hH] ;
+fragment I : [iI] ;
+fragment J : [jJ] ;
+fragment K : [kK] ;
+fragment L : [lL] ;
+fragment M : [mM] ;
+fragment N : [nN] ;
+fragment O : [oO] ;
+fragment P : [pP] ;
+fragment Q : [qQ] ;
+fragment R : [rR] ;
+fragment S : [sS] ;
+fragment T : [tT] ;
+fragment U : [uU] ;
+fragment V : [vV] ;
+fragment W : [wW] ;
+fragment X : [xX] ;
+fragment Y : [yY] ;
+fragment Z : [zZ] ;
 
 KLASS : C L A S S ;
-INHERITS : I N H E R I T S ;
-ID : [a-z]+ ;
-TYPE : [A-Z] [a-z]* ;
-ASSIGN : '<-' ;
-CASEASSIGN : '=>' ;
-
-DOT : '.' ;
-COMMA : ',' ;
-COLON : ':' ;
-SEMICOLON : ';' ;
-OPEN_P : '(' ;
-CLOSE_P : ')' ;
-OPEN_K : '{' ;
-CLOSE_K : '}' ;
-AT : '@' ;
-
-IF : I F ;
-THEN : T H E N ;
-ELSE : E L S E ;
 FI : F I ;
-WHILE : W H I L E ;
-LOOP : L O O P ;
-POOL : P O O L ;
-CASE : C A S E ;
-OF : O F ;
-ESAC : E S A C ;
-
-LET : L E T ;
+IF : I F ;
 IN : I N ;
-NEW : N E W ;
-ISVOID : I S V O I D ;
-MULT : '*' ;
-DIV : '/' ;
-ADD : '+' ;
-SUBS : '-' ;
-COMP : '~' ;
-LT : '<' ;
-LE : '<=' ;
-EQ : '=' ;
-NOT : N O T ;
-INT : [0-9]+ ;
-STRING : '"' (('\\'|'\t'|'\r\n'|'\r'|'\n'|'\\"') | ~('\\'|'\t'|'\r'|'\n'|'"'))* '"' ;
-TRUE : 'true' ;
-FALSE : 'false' ;
+INHERITS : I N H E R I T S;
+ISVOID : I S V O I D;
+LET : L E T;
+LOOP : L O O P;
+POOL : P O O L;
+THEN : T H E N;
+ELSE : E L S E;
+WHILE : W H I L E;
+CASE : C A S E;
+ESAC : E S A C;
+NEW : N E W; 
+OF : O F;
+NOT : N O T;
+TRUE : 't' R U E;
+FALSE : 'f' A L S E;
 
-SINGLECOMMENT: '--' ~[\r\n]* -> skip;
-MULTICOMMENT: '(*' .*? '*)' -> skip;
-WS: [ \n\t\r]+ -> skip;
+TYPE: [A-Z][_a-zA-Z0-9]* ;
+ID: [a-z][_a-zA-Z0-9]* ;
+INTEGER : [0-9]+ ;
+STRING  : '"' .*? '"' ;
+
+COMMENT : '(*' .*? '*)' -> skip ;
+LINE_COMENT : '--' ~[\r\n]* -> skip ;
+WS : [ \r\t\u000C\n]+ -> skip ;

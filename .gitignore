@@ -20,3 +20,6 @@
 
 # Ignore C# regression temporaries.
 **/Generated/
+
+# Python
+__pycache__

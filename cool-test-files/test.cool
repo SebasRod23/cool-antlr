@@ -3,5 +3,21 @@ class Main {
     
     main() : Int {
         0 + 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + variable
-        }; 
+    }; 
+
+    sum() : Int {
+        1 + 2 + 3
+    };
+
+    sum() : Int {
+        1 - 2 - 3
+    };
+
+    mult() : Int {
+        1 * 2 * 3
+    };
+
+    div() : Int {
+        1 / 2 / 3
+    };
 };

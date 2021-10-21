@@ -1,4 +1,4 @@
-# Generated from Cool.g4 by ANTLR 4.9.2
+# Generated from c:\Users\sebas\Documents\Python\Compiladores\cool-antlr\antlr\Cool.g4 by ANTLR 4.9.2
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -127,8 +127,8 @@ class CoolParser ( Parser ):
 
     literalNames = [ "<INVALID>", "';'", "'inherits'", "'{'", "'}'", "'('", 
                      "','", "')'", "':'", "'<-'", "'=>'", "'.'", "'@'", 
-                     "'\u02DC'", "'*'", "'/'", "'+'", "'-'", "'<'", "'<='", 
-                     "'='", "'not'" ]
+                     "'\u00CB\u0153'", "'*'", "'/'", "'+'", "'-'", "'<'", 
+                     "'<='", "'='", "'not'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -233,6 +233,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitProgram" ):
                 listener.exitProgram(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitProgram" ):
+                return visitor.visitProgram(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -297,6 +303,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitKlass" ):
                 listener.exitKlass(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitKlass" ):
+                return visitor.visitKlass(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -392,6 +404,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitMethod" ):
                 listener.exitMethod(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMethod" ):
+                return visitor.visitMethod(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class AtributeContext(FeatureContext):
 
@@ -414,6 +432,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitAtribute" ):
                 listener.exitAtribute(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAtribute" ):
+                return visitor.visitAtribute(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -522,6 +546,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitFormal" ):
                 listener.exitFormal(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitFormal" ):
+                return visitor.visitFormal(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -583,6 +613,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitAdd" ):
                 listener.exitAdd(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAdd" ):
+                return visitor.visitAdd(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class NewContext(ExprContext):
 
@@ -602,6 +638,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitNew" ):
                 listener.exitNew(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNew" ):
+                return visitor.visitNew(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class SubContext(ExprContext):
@@ -625,6 +667,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitSub" ):
                 listener.exitSub(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSub" ):
+                return visitor.visitSub(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class MultContext(ExprContext):
 
@@ -647,6 +695,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitMult" ):
                 listener.exitMult(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMult" ):
+                return visitor.visitMult(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class IsvoidContext(ExprContext):
 
@@ -667,6 +721,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitIsvoid" ):
                 listener.exitIsvoid(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitIsvoid" ):
+                return visitor.visitIsvoid(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class LtContext(ExprContext):
@@ -689,6 +749,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitLt" ):
                 listener.exitLt(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLt" ):
+                return visitor.visitLt(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class WhileContext(ExprContext):
@@ -718,6 +784,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitWhile" ):
                 listener.exitWhile(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitWhile" ):
+                return visitor.visitWhile(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class EqContext(ExprContext):
 
@@ -739,6 +811,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitEq" ):
                 listener.exitEq(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitEq" ):
+                return visitor.visitEq(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class CallContext(ExprContext):
@@ -764,6 +842,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitCall" ):
                 listener.exitCall(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitCall" ):
+                return visitor.visitCall(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class DivContext(ExprContext):
 
@@ -786,6 +870,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitDiv" ):
                 listener.exitDiv(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDiv" ):
+                return visitor.visitDiv(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class NegContext(ExprContext):
 
@@ -805,6 +895,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitNeg" ):
                 listener.exitNeg(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNeg" ):
+                return visitor.visitNeg(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class NotContext(ExprContext):
 
@@ -823,6 +919,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitNot" ):
                 listener.exitNot(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNot" ):
+                return visitor.visitNot(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class AtContext(ExprContext):
@@ -850,6 +952,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitAt" ):
                 listener.exitAt(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAt" ):
+                return visitor.visitAt(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class LeContext(ExprContext):
 
@@ -871,6 +979,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitLe" ):
                 listener.exitLe(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLe" ):
+                return visitor.visitLe(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class LetContext(ExprContext):
@@ -908,6 +1022,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitLet" ):
                 listener.exitLet(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLet" ):
+                return visitor.visitLet(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class BlockContext(ExprContext):
 
@@ -929,6 +1049,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBlock" ):
                 listener.exitBlock(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlock" ):
+                return visitor.visitBlock(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class IfContext(ExprContext):
@@ -959,6 +1085,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitIf" ):
                 listener.exitIf(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitIf" ):
+                return visitor.visitIf(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class CaseContext(ExprContext):
@@ -998,6 +1130,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitCase" ):
                 listener.exitCase(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitCase" ):
+                return visitor.visitCase(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class BaseContext(ExprContext):
 
@@ -1016,6 +1154,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBase" ):
                 listener.exitBase(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBase" ):
+                return visitor.visitBase(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class AssignContext(ExprContext):
@@ -1037,6 +1181,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitAssign" ):
                 listener.exitAssign(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAssign" ):
+                return visitor.visitAssign(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1533,6 +1683,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitParens" ):
                 listener.exitParens(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitParens" ):
+                return visitor.visitParens(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class StringContext(PrimaryContext):
 
@@ -1550,6 +1706,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitString" ):
                 listener.exitString(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitString" ):
+                return visitor.visitString(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class BoolContext(PrimaryContext):
@@ -1571,6 +1733,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitBool" ):
                 listener.exitBool(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBool" ):
+                return visitor.visitBool(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class IntegerContext(PrimaryContext):
 
@@ -1589,6 +1757,12 @@ class CoolParser ( Parser ):
             if hasattr( listener, "exitInteger" ):
                 listener.exitInteger(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInteger" ):
+                return visitor.visitInteger(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class ObjectContext(PrimaryContext):
 
@@ -1606,6 +1780,12 @@ class CoolParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitObject" ):
                 listener.exitObject(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitObject" ):
+                return visitor.visitObject(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 

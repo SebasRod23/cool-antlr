@@ -6,6 +6,7 @@ from antlr4 import FileStream, ParseTreeWalker, CommonTokenStream
 from antlr.CoolLexer import CoolLexer
 from antlr.CoolParser import CoolParser
 
+from listeners.declare import Declarations
 from listeners.typecheck import Typecheck
 
 
@@ -17,8 +18,11 @@ def main():
   tree = parser.program()
 
   walker = ParseTreeWalker()
-  typecheck = Typecheck()
-  walker.walk(typecheck, tree)
+  # typecheck = Typecheck()
+  # walker.walk(typecheck, tree)
 
+  declare = Declarations()
+  walker.walk(declare, tree)
+  
 
 main()

@@ -11,17 +11,18 @@ from listeners.typecheck import Typecheck
 
 
 def main():
-  input_file = FileStream('./cool-test-files/test.cool')
+  input_file = FileStream('./input/semantic/simplearith.cool')
 
   lexer = CoolLexer(input_file)
   parser = CoolParser(CommonTokenStream(lexer))
   tree = parser.program()
 
   walker = ParseTreeWalker()
-  # typecheck = Typecheck()
+  typecheck = Typecheck()
   # walker.walk(typecheck, tree)
 
   declare = Declarations()
+  walker.walk(typecheck, tree)
   walker.walk(declare, tree)
   
 

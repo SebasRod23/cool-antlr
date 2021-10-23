@@ -127,8 +127,8 @@ class CoolParser ( Parser ):
 
     literalNames = [ "<INVALID>", "';'", "'inherits'", "'{'", "'}'", "'('", 
                      "','", "')'", "':'", "'<-'", "'=>'", "'.'", "'@'", 
-                     "'\u00CB\u0153'", "'*'", "'/'", "'+'", "'-'", "'<'", 
-                     "'<='", "'='", "'not'" ]
+                     "'~'", "'*'", "'/'", "'+'", "'-'", "'<'", "'<='", "'='", 
+                     "'not'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 

@@ -29,7 +29,7 @@ expr
     | '{' ( expr ';' )+ '}' #block
     | expr '.' ID '(' ( expr  ( ',' expr)* )? ')' #call
     | expr ( '@' TYPE )? '.' ID '(' ( expr  ( ',' expr)* )? ')' #at
-    | '˜' expr          #neg
+    | '~' expr          #neg
     | ISVOID expr       #isvoid
     | expr '*' expr     #mult
     | expr '/' expr     #div

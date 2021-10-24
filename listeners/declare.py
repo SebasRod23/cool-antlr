@@ -4,6 +4,9 @@ from exceptions.exceptions import *
 
 
 class Declarations(CoolListener):
+  def __init__(self, types={}):
+    self.types = types
+
   idTable = {}
   inClass = False
   hasMain = False
@@ -12,6 +15,6 @@ class Declarations(CoolListener):
   classname = ""
   letTable = {'self'}
 
-  def enterProgram(self, ctx:CoolParser.ProgramContext):
-    print(ctx.typesTable)
-    
+  def enterProgram(self, ctx: CoolParser.ProgramContext):
+    # print(ctx.typesTable)
+    pass

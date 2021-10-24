@@ -9,21 +9,27 @@ from antlr.CoolParser import CoolParser
 from listeners.declare import Declarations
 from listeners.typecheck import Typecheck
 
+from other.tree import TreePrinter
+
 
 def main():
-  input_file = FileStream('./input/semantic/simplearith.cool')
+  input_file = FileStream('./input/semantic/classes.cool')
+  # input_file = FileStream('./input/semantic/basicclassestree.cool')
 
   lexer = CoolLexer(input_file)
   parser = CoolParser(CommonTokenStream(lexer))
   tree = parser.program()
 
   walker = ParseTreeWalker()
-  typecheck = Typecheck()
-  # walker.walk(typecheck, tree)
 
-  declare = Declarations()
+  types = {}
+  typecheck = Typecheck(types)
+  declare = Declarations(types)
+  tree_printer = TreePrinter(types)
+
   walker.walk(typecheck, tree)
   walker.walk(declare, tree)
-  
+  walker.walk(tree_printer, tree)
+
 
 main()

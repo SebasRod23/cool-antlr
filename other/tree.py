@@ -5,6 +5,8 @@ from exceptions import *
 
 class TreePrinter(CoolListener):
   def __init__(self, types={}):
+    self.output = ""
+
     self.depth = 0
     self.types = types
 
@@ -33,6 +35,10 @@ class TreePrinter(CoolListener):
         'Isvoid': 'Isvoid',
         'Let': 'ALetExpr',
         'Neg': 'ANegExpr',
+        'Parens': 'ABranch',
+        'Case': 'ACaseExpr',
+        'List': 'List',
+        'If': 'AIfExpr',
     }
 
   def enterEveryRule(self, ctx):
@@ -66,9 +72,10 @@ class TreePrinter(CoolListener):
       to_print = "\n  >- A%s" % ctx_name_to_print
 
     try:
-      print("%s:%s" % (to_print, self.types[ctx]))
+      self.output += self.print_and_return("%s:%s" %
+                                           (to_print, self.types[ctx]))
     except:
-      print(to_print)
+      self.output += self.print_and_return(to_print)
 
     # Print characteristics
     if ctx_name == 'Klass':
@@ -78,33 +85,46 @@ class TreePrinter(CoolListener):
         class_types.append('Object')
 
       for class_type in class_types:
-        print("%s- %s" % (indent, class_type))
+        self.output += self.print_and_return("%s- %s" % (indent, class_type))
     elif ctx_name == 'Atribute':
       indent += base_indent
-      print("%s- %s\n%s- %s" % (indent, ctx.ID(), indent, ctx.TYPE()))
+      self.output += self.print_and_return("%s- %s\n%s- %s" %
+                                           (indent, ctx.ID(), indent, ctx.TYPE()))
     elif ctx_name in ('Method', 'Atribute'):
       indent += base_indent
-      print("%s- %s" % (indent, ctx.ID()))
+      self.output += self.print_and_return("%s- %s" % (indent, ctx.ID()))
       for formal in ctx.formal():
-        print("%s- AFormal" % (indent))
-        print("%s%s- %s" % (indent, base_indent, formal.ID()))
-        print("%s%s- %s" % (indent, quote_indent, formal.TYPE()))
-      print("%s- %s" % (indent, ctx.TYPE()))
+        self.output += self.print_and_return("%s- AFormal" % (indent))
+        self.output += self.print_and_return("%s%s- %s" %
+                                             (indent, base_indent, formal.ID()))
+        self.output += self.print_and_return("%s%s- %s" %
+                                             (indent, quote_indent, formal.TYPE()))
+      self.output += self.print_and_return("%s- %s" % (indent, ctx.TYPE()))
     elif ctx_name == 'Integer':
       indent += quote_indent
-      print("%s- %s" % (indent, ctx.INTEGER()))
+      self.output += self.print_and_return("%s- %s" % (indent, ctx.INTEGER()))
     elif ctx_name == 'String':
       indent += quote_indent
-      print("%s- %s" % (indent, ctx.STRING().getText().replace('"', "")))
+      self.output += self.print_and_return("%s- %s" %
+                                           (indent, ctx.STRING().getText().replace('"', "")))
     elif ctx_name == 'Bool':
       indent += quote_indent
-      print("%s- %s" % (indent, (ctx.FALSE() or ctx.TRUE())))
+      self.output += self.print_and_return("%s- %s" %
+                                           (indent, (ctx.FALSE() or ctx.TRUE())))
     elif ctx_name == 'New':
       indent += quote_indent
-      print("%s- %s" % (indent, (ctx.TYPE())))
+      self.output += self.print_and_return("%s- %s" % (indent, (ctx.TYPE())))
     elif ctx_name in ('Object', 'Assign', 'Call'):
       indent += quote_indent
-      print("%s- %s" % (indent, ctx.ID()))
+      self.output += self.print_and_return("%s- %s" % (indent, ctx.ID()))
+    elif ctx_name in ('Let'):
+      indent += base_indent
+      self.output += self.print_and_return("%s- %s\n%s- %s" %
+                                           (indent, ctx.ID()[0], indent, ctx.TYPE()[0]))
+
+  def print_and_return(self, text: str):
+    print(text)
+    return text
 
   def exitEveryRule(self, ctx):
     ctx_name = type(ctx).__name__[:-7]
@@ -116,10 +136,13 @@ class TreePrinter(CoolListener):
       self.in_method_or_attribute = False
     elif ctx_name == "At":
       indent = "     |" + "  |" * (self.depth + 1)
-      print("%s- %s" % (indent, ctx.ID()))
+      self.output += self.print_and_return("%s- %s" % (indent, ctx.ID()))
       self.depth = self.depth - 1
     elif ctx_name in self.expressions:
       self.depth = self.depth - 1
 
   def exitProgram(self, ctx: CoolParser.ProgramContext):
-    print("\n")
+    self.print_and_return("\n")
+
+  def get_output(self):
+    return self.output

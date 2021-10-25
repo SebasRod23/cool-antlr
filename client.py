@@ -6,8 +6,8 @@ from antlr4 import FileStream, ParseTreeWalker, CommonTokenStream
 from antlr.CoolLexer import CoolLexer
 from antlr.CoolParser import CoolParser
 
-from listeners.declare import Declarations
-from listeners.checker import Checker
+from listeners.declarechecker import DeclareChecker
+from listeners.typechecker import TypeChecker
 
 from other.tree import TreePrinter
 

@@ -12,9 +12,11 @@ class Typecheck(CoolListener):
     # Initilize
     self.typesTable = {}
     self.inClass = False
+    self.classTypes = {}
     self.className = ''
     self.inMethod = False
     self.methodName = ''
+    self.attrs = {}
     self.basicClasses = {'Int', 'String', 'Bool', 'Object', 'SELF_TYPE'}
     self.typesNotToInherit = {'Int', 'String', 'Bool', 'SELF_TYPE'}
 
@@ -55,6 +57,8 @@ class Typecheck(CoolListener):
 
     # If there are no exceptions, then save the types table for the next listener
     ctx.typesTable = self.typesTable
+    ctx.var_table = self.var_table
+    ctx.classTypes = self.classTypes
 
   def enterKlass(self, ctx: CoolParser.KlassContext):
     # Every time you enter a class, define the structure of the class dictionary
@@ -63,22 +67,32 @@ class Typecheck(CoolListener):
     self.typesTable[self.className] = {}
     self.typesTable[self.className]['attributes'] = {}
     self.typesTable[self.className]['methods'] = {}
+    self.attrs = {}
+
+    if self.className in self.classTypes: raise ClassRedefinition
 
     # Check if it inherits another class
     if ctx.getChild(2).getText() == 'inherits':
       self.typesTable[self.className]['inherits'] = ctx.getChild(3).getText()
+      self.classTypes[self.className] = ctx.getChild(3).getText()
+      ctx.inherits = ctx.getChild(3).getText()
     else:
       self.typesTable[self.className]['inherits'] = None
+      self.classTypes[self.className] = None
+      ctx.inherits = None
+    
 
   def enterAtribute(self, ctx: CoolParser.AtributeContext):
     self.typesTable[self.className]['attributes'][ctx.ID().getText()
                                                   ] = ctx.TYPE().getText()
 
     self.var_table[ctx.ID().getText()] = ctx.TYPE().getText()
+    self.attrs[ctx.ID().getText()] = ctx.TYPE().getText()
 
   def exitKlass(self, ctx: CoolParser.KlassContext):
     self.className = ''
     self.inClass = False
+    ctx.attrs = self.attrs
 
   def enterMethod(self, ctx: CoolParser.MethodContext):
     # Every time you enter a  new method, define the structure of the dictionary
@@ -87,16 +101,22 @@ class Typecheck(CoolListener):
     self.typesTable[self.className]['methods'][self.methodName] = {
         'type': ctx.TYPE().getText()}
     self.typesTable[self.className]['methods'][self.methodName]['params'] = {}
+    self.types[ctx] = ctx.TYPE().getText()
+    self.currParams = set()
 
   def exitMethod(self, ctx: CoolParser.MethodContext):
     self.inMethod = False
     self.methodName = ''
+    for param in self.currParams:
+      del self.var_table[param]
 
   def enterFormal(self, ctx: CoolParser.FormalContext):
     # Get the type and id for each formal parameter in a method
     if self.inMethod:
-      self.typesTable[self.className]['methods'][self.methodName]['params'][ctx.ID(
-      ).getText()] = ctx.TYPE().getText()
+      self.typesTable[self.className]['methods'][self.methodName]['params'][ctx.ID().getText()] = ctx.TYPE().getText()
+      self.var_table[ctx.ID().getText()] = ctx.TYPE().getText()
+      if str(ctx.ID().getText()) in self.currParams: raise KeyError
+      self.currParams.add(str(ctx.ID().getText()))
 
   def enterLet(self, ctx: CoolParser.LetContext):
     # Get the id for each let in a line
@@ -127,13 +147,16 @@ class Typecheck(CoolListener):
 
   def exitBase(self, ctx: CoolParser.BaseContext):
     # print(ctx.getChild(0).getText())
-
-    ctx.type = ctx.getChild(0).type
-    self.types[ctx] = self.types[ctx.getChild(0)]
+    if hasattr(ctx.getChild(0), 'type'):
+      ctx.type = ctx.getChild(0).type
+      self.types[ctx] = self.types[ctx.getChild(0)]
 
   def exitObject(self, ctx: CoolParser.ObjectContext):
-    ctx.type = self.var_table[ctx.ID().getText()]
-    self.types[ctx] = self.var_table[ctx.ID().getText()]
+    if ctx.ID().getText() == "self":
+      self.types[ctx] = self.className
+    else: 
+      ctx.type = self.var_table[ctx.ID().getText()]
+      self.types[ctx] = self.var_table[ctx.ID().getText()]
 
   def exitMult(self, ctx: CoolParser.MultContext):
     if self.types[ctx.expr(0)] == "Int" and self.types[ctx.expr(1)] == "Int":
@@ -145,7 +168,7 @@ class Typecheck(CoolListener):
     if self.types[ctx.expr(0)] == "Int" and self.types[ctx.expr(1)] == "Int":
       self.types[ctx] = "Int"
     else:
-      raise Exception("Type error in Div")
+      raise TypeCheckMismatch
 
   def exitAdd(self, ctx: CoolParser.AddContext):
     # if ctx.expr(0).type == "Int" and ctx.expr(1).type == "Int":
@@ -154,8 +177,43 @@ class Typecheck(CoolListener):
     if self.types[ctx.expr(0)] == "Int" and self.types[ctx.expr(1)] == "Int":
       self.types[ctx] = "Int"
     else:
-      raise Exception("Type error in Add")
+      raise TypeCheckMismatch
+  
+  def exitEq(self, ctx:CoolParser.EqContext):
+    if self.types[ctx.expr(0)] == "Int" and self.types[ctx.expr(1)] == "Int":
+      self.types[ctx] = "Int"
+    else:
+      raise TypeCheckMismatch
 
   def exitSub(self, ctx: CoolParser.SubContext):
     if self.types[ctx.expr(0)] == "Int" and self.types[ctx.expr(1)] == "Int":
       self.types[ctx] = "Int"
+
+  def exitAssign(self, ctx:CoolParser.AssignContext):
+    self.types[ctx] = self.types[ctx.expr()]
+
+  def exitNew(self, ctx:CoolParser.NewContext):
+    self.types[ctx] = ctx.TYPE()
+
+  def exitWhile(self, ctx:CoolParser.WhileContext):
+    if not self.types[ctx.expr(0)] == "Bool":
+      raise TypeCheckMismatch
+    # TODO: Add type to while
+
+  def enterCase(self, ctx:CoolParser.CaseContext):
+    types = set()
+    size = len(ctx.TYPE())
+    for i in range(size):
+      if ctx.TYPE(i).getText() in types: raise InvalidCase
+      types.add(ctx.TYPE(i).getText())
+      self.var_table[ctx.ID(i).getText()] = ctx.TYPE(i).getText()
+
+    # self.types[ctx] = types
+
+  # def exitCall(self, ctx:CoolParser.CallContext):
+    # if str(ctx.getChild(1)) == '.':
+      # Something with the first expr
+      # Something with the rest of the call
+      # for expr in ctx.expr()[1:]:
+        
+  

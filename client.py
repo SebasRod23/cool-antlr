@@ -13,7 +13,7 @@ from other.tree import TreePrinter
 
 
 def main():
-  input_file = FileStream('./input/semantic/classes.cool')
+  input_file = FileStream('./input/semantic/returntypenoexist.cool')
   # input_file = FileStream('./input/semantic/basicclassestree.cool')
 
   lexer = CoolLexer(input_file)
@@ -25,11 +25,11 @@ def main():
   types = {}
   typecheck = Typecheck(types)
   declare = Declarations(types)
-  tree_printer = TreePrinter(types)
+  # tree_printer = TreePrinter(types)
 
   walker.walk(typecheck, tree)
   walker.walk(declare, tree)
-  walker.walk(tree_printer, tree)
+  # walker.walk(tree_printer, tree)
 
 
 main()

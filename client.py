@@ -13,8 +13,7 @@ from other.tree import TreePrinter
 
 
 def main():
-  input_file = FileStream('./input/semantic/classes.cool')
-  # input_file = FileStream('./input/semantic/basicclassestree.cool')
+  input_file = FileStream('./input/semantic/trickyatdispatch.cool')
 
   lexer = CoolLexer(input_file)
   parser = CoolParser(CommonTokenStream(lexer))

@@ -195,10 +195,17 @@ class Typecheck(CoolListener):
   def exitNew(self, ctx:CoolParser.NewContext):
     self.types[ctx] = ctx.TYPE()
 
+  def exitBlock(self, ctx:CoolParser.BlockContext):
+    lastExpr = ctx.expr(len(ctx.expr())-1)
+    self.types[ctx] = self.types[lastExpr]
+
   def exitWhile(self, ctx:CoolParser.WhileContext):
     if not self.types[ctx.expr(0)] == "Bool":
       raise TypeCheckMismatch
     # TODO: Add type to while
+
+  def exitNeg(self, ctx:CoolParser.NegContext):
+    self.types[ctx] = 'Int'
 
   def enterCase(self, ctx:CoolParser.CaseContext):
     types = set()

@@ -13,7 +13,7 @@ from other.tree import TreePrinter
 
 
 def main():
-  input_file = FileStream('./input/semantic/returntypenoexist.cool')
+  input_file = FileStream('./input/semantic/simplearith.cool')
   # input_file = FileStream('./input/semantic/basicclassestree.cool')
 
   lexer = CoolLexer(input_file)
